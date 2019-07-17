@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Home Page";
+    @inject UserManager<IdentityUser> UserManager
+}
+<div id="app">
+    <section v-if="errored">
+        <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+    </section>
+
+    <section v-else>
+        <div v-if="loading"><vue-typer text='Loading'></vue-typer></div>
+
+        <div v-else>
+            <div class="content">
+                <template v-for="item in items">
+                    <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle"></gc-item>
+                </template>
+
+            </div>
+            <div class="response">
+                <gc-response v-on:eventname="updateparent($event)" author="@UserManager.GetUserName(User)"></gc-response>
+            </div>
+            <div class="submit">
+                <button v-on:click="postConversation()">Finish</button>
+            </div>
+        </div>
+
+    </section>
+</div>

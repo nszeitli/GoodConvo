@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using GoodConvo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using GoodConvo.Models;
 
 namespace GoodConvo
 {
@@ -33,14 +34,18 @@ namespace GoodConvo
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            var connection = @"Data Source=SQL5042.site4now.net;Initial Catalog=DB_A4427A_journal;User Id=DB_A4427A_journal_admin;Password=!Akarma464;";
+            services.AddDbContext<ApplicationDbContext>
+                (options => options.UseSqlServer(connection));
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            connection = @"Data Source=SQL5042.site4now.net;Initial Catalog=DB_A4427A_journal;User Id=DB_A4427A_journal_admin;Password=!Akarma464;";
+            services.AddDbContext<JournalContext>
+                (options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

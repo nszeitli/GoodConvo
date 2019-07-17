@@ -20,7 +20,7 @@ namespace GoodConvo.Areas.Coaches
                 new Question
                 {
                     Id = 0,
-                    GUID = "somjeguid",
+                    Index = 0,
                     QuestionText = "How was waking up this morning?"
                 }
             );
@@ -29,7 +29,7 @@ namespace GoodConvo.Areas.Coaches
                 new Question
                 {
                     Id = 1,
-                    GUID = "somjeguid1",
+                    Index = 1,
                     QuestionText = "What time did you start effectively working?"
                 }
             );
@@ -38,7 +38,7 @@ namespace GoodConvo.Areas.Coaches
                 new Question
                 {
                     Id = 2,
-                    GUID = "somjeguid2",
+                    Index = 2,
                     QuestionText = "How many hours of work did you get done this morning?"
                 }
             );
@@ -47,7 +47,7 @@ namespace GoodConvo.Areas.Coaches
                 new Question
                 {
                     Id = 3,
-                    GUID = "somjeguid3",
+                    Index = 3,
                     QuestionText = "What is the biggest challenge to your morning routine?"
                 }
             );
@@ -56,7 +56,7 @@ namespace GoodConvo.Areas.Coaches
                 new Question
                 {
                     Id = 4,
-                    GUID = "somjeguid4",
+                    Index = 4,
                     QuestionText = "What should you work on in the short term?"
                 }
             );

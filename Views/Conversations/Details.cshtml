@@ -1,0 +1,18 @@
+﻿@model GoodConvo.Models.EntityModels.Conversation
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>Conversation Details</h2>
+
+<div>
+    <h4>Conversation</h4>
+    <hr />
+          
+    <div class="doc-view">@Html.Raw(Model.Document)</div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

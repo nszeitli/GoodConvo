@@ -19,7 +19,7 @@ namespace GoodConvo.Areas.Coaches
                 return new Question
                 {
                     Id = 99,
-                    GUID = "somjeguid99",
+                    Index = 99,
                     QuestionText = "Thats all I have right now, come back tomorrow"
                 };
             }

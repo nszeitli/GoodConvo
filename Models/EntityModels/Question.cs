@@ -8,12 +8,11 @@ namespace GoodConvo.Models.EntityModels
     public class Question
     {
         public int Id { get; set; }
-        public String GUID { get; set; }
+        public int Index { get; set; }
         public String QuestionText { get; set; }
 
         public Question()
         {
-            GUID = Guid.NewGuid().ToString();
         }
     }
 }

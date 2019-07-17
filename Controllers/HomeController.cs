@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GoodConvo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GoodConvo.Controllers
 {
@@ -15,10 +16,9 @@ namespace GoodConvo.Controllers
             return View();
         }
 
-        public IActionResult About()
+        [Authorize]
+        public IActionResult Journal()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 

@@ -19,11 +19,20 @@ new Vue({
         updateparent: function (item) {
             this.items.push(item);
             this.index++;
+        },
+        postConversation: function () {
+            axios
+                .post('/api/Submit',
+                    this.items)
+                .catch(error => {
+                    console.log(error)
+                });
+            window.location.href = 'Journal/';
         }
     },
     mounted() {
         axios
-            .get('https://localhost:44393/api/Start?coach=Jack')
+            .get('/api/Start?coach=Jack')
             .then(response => {
                 console.log(response)
                 this.items = response.data
@@ -61,7 +70,7 @@ Vue.component('gc-response', {
             item.content = toSend;
             this.$emit('eventname', item);
             var a = this;
-            axios.get("https://localhost:44393/api/Response/?value=" + toSend + "&coach=Jack&index=" + 2)
+            axios.get("/api/Response/?value=" + toSend + "&coach=Jack&index=" + 2)
                 .then(function (response) {
                     a.$emit('eventname', response.data)
                 }).catch(function (error) {
