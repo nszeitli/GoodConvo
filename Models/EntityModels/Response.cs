@@ -7,8 +7,6 @@ namespace GoodConvo.Models.EntityModels
 {
     public class Response
     {
-        class Response
-        {
             public String GUID { get; set; }
             public bool IsTextResponse { get; set; }
             public String TextResponse { get; set; }
@@ -19,6 +17,5 @@ namespace GoodConvo.Models.EntityModels
                 GUID = Guid.NewGuid().ToString();
             }
 
-        }
     }
 }
