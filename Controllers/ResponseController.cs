@@ -29,7 +29,7 @@ namespace GoodConvo.Controllers
             if (c == null) { return new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }; }
             Question nextQ = c.GetNextQuestion(index);
 
-            return new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = c.ClassName };
+            return new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = c.ClassName, Type = nextQ.Type.ToString() };
         }
 
         // POST: api/Response

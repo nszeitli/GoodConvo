@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace GoodConvo.Models.EntityModels
 {
-    enum QuestionType
+    public enum QuestionType
     {
         Text = 0,
-        Numerical = 1,
-        YesNo = 2
+        LongText =1,
+        Numerical = 2
     }
 }

@@ -73,6 +73,8 @@ namespace GoodConvo.Migrations
 
                     b.Property<string>("QuestionText");
 
+                    b.Property<int>("Type");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CoachId");

@@ -11,6 +11,8 @@ namespace GoodConvo.Models.EntityModels
         public int Index { get; set; }
         public String QuestionText { get; set; }
 
+        public QuestionType Type { get; set; }
+
         public Question()
         {
         }

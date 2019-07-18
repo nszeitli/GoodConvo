@@ -1,7 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Identity
+
+    
+@inject UserManager<ApplicationUser> UserManager
 @{
-    ViewData["Title"] = "Home Page";
-    @inject UserManager<IdentityUser> UserManager
+    ViewData["Title"] = "Journal";
+    var u = await @UserManager.GetUserAsync(User);
+    var userName = u.UserName;
+    if (u.FirstName != null)
+    {
+        userName = u.FirstName;
+    }
+
 }
 <div id="app">
     <section v-if="errored">
@@ -18,13 +27,30 @@
                 </template>
 
             </div>
-            <div class="response">
-                <gc-response v-on:eventname="updateparent($event)" author="@UserManager.GetUserName(User)"></gc-response>
+            <div v-if="!longresponse && !numresponse">
+                <div class="response">
+                    <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index"></gc-response>
+                </div>
+            </div>
+            <div v-if="longresponse">
+                <div class="response-long">
+                    <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index"></gc-response-long>
+                </div>
+            </div>
+            <div v-if="numresponse">
+                <div class="response-num">
+                    <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index"></gc-response-num>
+                </div>
             </div>
             <div class="submit">
                 <button v-on:click="postConversation()">Finish</button>
             </div>
         </div>
-
+        
     </section>
 </div>
+
+@section Scripts {
+    <script src="~/js/coach.js"></script>
+    <link rel="stylesheet" href="~/css/Slider.css" />
+}

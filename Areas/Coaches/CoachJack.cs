@@ -20,6 +20,7 @@ namespace GoodConvo.Areas.Coaches
                 {
                     Id = 99,
                     Index = 99,
+                    Type = QuestionType.Text,
                     QuestionText = "Thats all I have right now, come back tomorrow"
                 };
             }

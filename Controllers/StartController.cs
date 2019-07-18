@@ -28,7 +28,7 @@ namespace GoodConvo.Controllers
             if (c == null) { output.Add(new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }); return output; }
             Question nextQ = c.GetNextQuestion(0);
             
-            output.Add(new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = c.ClassName });
+            output.Add(new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = c.ClassName, Type = nextQ.Type.ToString() });
             return output;
         }
 

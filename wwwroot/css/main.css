@@ -1,0 +1,145 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+section {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.content {
+    margin-bottom: 10px;
+}
+
+.gc-item {
+    margin-left: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #000 !important;
+    background-color: #ddffff;
+    border-left: 6px solid #ccc;
+    border-color: #2196F3;
+    border-radius: 2px;
+}
+
+.coach {
+    border-color: red;
+    margin-left: 0px;
+    background-color: #f7f4f2;
+}
+
+.gc-author {
+    font-family: Verdana,sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.gc-response {
+    margin-left: 5px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #000 !important;
+
+}
+
+.gc-content {
+    font-family: Verdana,sans-serif;
+    font-size: 12px;
+    line-height: 1.2;
+    margin-left: 5px;
+}
+
+button {
+    display: inline-block;
+    padding: 0.35em 1.2em;
+    border: 0.1em solid #000;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+    border-radius: 0.12em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 300;
+    color: #000;
+    text-align: center;
+    transition: all 0.2s;
+    background-color: #f7f4f2;
+}
+
+    button:hover {
+        font-weight: 600;
+    }
+
+@media all and (max-width:30em) {
+     button {
+        display: block;
+        margin: 0.4em auto;
+    }
+}
+
+
+//Input fieldset
+Input {
+    position: relative;
+    
+}
+
+Input {
+    margin: 10px;
+    padding: 10px 10px 10px 10px;
+    margin: 0 .25rem;
+    min-width: 325px;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    transition: border-color .5s ease-out;
+    font-family: Verdana,sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+    Input::placeholder {
+        color: #B0BEC5;
+    }
+
+    Input:focus {
+        outline: none;
+        box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
+    }
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}

@@ -55,6 +55,9 @@ namespace GoodConvo.Controllers
 
                 int iCoach = 0;
                 int iUser = 0;
+                newConvo.QuestionsAsked = new List<Question>();
+                newConvo.ResponseList = new List<Response>();
+
                 foreach (GcItem item in items)
                 {
                     if(item.compstyle != null && item.compstyle.Contains("coach"))
@@ -80,7 +83,7 @@ namespace GoodConvo.Controllers
                 String doc = "<p>Journal entry at " + DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() +" by " + User.Identity.Name + "</p>";
                 foreach (var item in newConvo.QuestionsAsked)
                 {
-                    doc = doc + "<p><b>" + "(" + item.Index + ")" + item.QuestionText + "</b></p>";
+                    doc = doc + "<p><b>" + "(" + (item.Index + 1) + ") " + item.QuestionText + "</b></p>";
                     string response = "-";
                     try
                     {
