@@ -66,7 +66,7 @@ namespace GoodConvo.Areas.Coaches
                 }
             );
 
-            CoachList.Add("Jack", jack);
+            CoachList.Add("jack", jack);
         }
     }
 }

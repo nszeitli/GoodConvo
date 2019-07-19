@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodConvo.Areas.Coaches;
+using GoodConvo.Models;
 using GoodConvo.Models.EntityModels;
 using GoodConvo.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoodConvo.Controllers
 {
@@ -15,7 +17,11 @@ namespace GoodConvo.Controllers
     [ApiController]
     public class ResponseController : ControllerBase
     {
-        // GET: api/Response
+        private JournalContext _context;
+        public ResponseController(JournalContext context)
+        {
+            this._context = context;
+        }
 
         // GET: api/Response/5
         [HttpGet(Name = "Get a response")]
@@ -23,13 +29,16 @@ namespace GoodConvo.Controllers
         public GcItem Get([FromQuery] string value, [FromQuery] string coach, [FromQuery] int index)
         {
             //get coach
-            CoachManager cm = new CoachManager();
-            CoachHelper c = null;
-            cm.CoachList.TryGetValue(coach, out c);
-            if (c == null) { return new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }; }
-            Question nextQ = c.GetNextQuestion(index);
+            GcItem output = new GcItem();
+            var c = _context.Coaches.Include(j => j.QuestionList).Where(i => i.Name.ToLower() == coach.ToLower()).ToList()[0];
+            if (c == null) { output = new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }; return output; }
+            if (index >= c.QuestionList.Count ) { return new GcItem { Content = "Thats all I have today, come back tomorrow", Author = "Coach " + c.Name, compstyle = "coach", Type = "Final" }; }
+            else
+            {
+                Question nextQ = c.QuestionList[index];
+                return new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = "coach", Type = nextQ.Type.ToString() };
+            }
 
-            return new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = c.ClassName, Type = nextQ.Type.ToString() };
         }
 
         // POST: api/Response

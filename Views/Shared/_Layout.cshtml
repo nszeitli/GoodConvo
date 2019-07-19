@@ -46,6 +46,12 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Journal">Journal</a></li>
                     <li><a asp-area="" asp-controller="Conversations" asp-action="Index">History</a></li>
+                    <li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            <a asp-area="" asp-controller="CoachView" asp-action="Index">Coaches</a>
+                        }
+                    </li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

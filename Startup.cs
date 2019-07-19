@@ -54,7 +54,7 @@ namespace GoodConvo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
             IHostingEnvironment env, ApplicationDbContext context,
-            RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
+            RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, JournalContext jcontext)
         {
             if (env.IsDevelopment())
             {
@@ -81,6 +81,7 @@ namespace GoodConvo
             });
 
             SeedData.Initialize(context, userManager, roleManager).Wait();
+            //SeedData.SeedCoaches(jcontext).Wait();
         }
     }
 }

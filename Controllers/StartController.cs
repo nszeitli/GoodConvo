@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodConvo.Areas.Coaches;
+using GoodConvo.Models;
 using GoodConvo.Models.EntityModels;
 using GoodConvo.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoodConvo.Controllers
 {
@@ -15,6 +17,12 @@ namespace GoodConvo.Controllers
     [ApiController]
     public class StartController : ControllerBase
     {
+        private JournalContext _context;
+        public StartController(JournalContext context)
+        {
+            this._context = context;
+        }
+        
         // GET: api/Start
         [HttpGet]
         [Authorize]
@@ -22,13 +30,11 @@ namespace GoodConvo.Controllers
         {
             //get coach
             List<GcItem> output = new List<GcItem>();
-            CoachManager cm = new CoachManager();
-            CoachHelper c = null;
-            cm.CoachList.TryGetValue(coach, out c);
-            if (c == null) { output.Add(new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }); return output; }
-            Question nextQ = c.GetNextQuestion(0);
+            var cq = _context.Coaches.Include(j => j.QuestionList).Where(i => i.Name.ToLower() == coach.ToLower()).ToList();
+            if (cq == null) { output.Add(new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }); return output; }
+            Question nextQ = cq[0].QuestionList[0];
             
-            output.Add(new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = c.ClassName, Type = nextQ.Type.ToString() });
+            output.Add(new GcItem { Content = nextQ.QuestionText, Author = "Coach " + cq[0].Name, compstyle = "coach", Type = nextQ.Type.ToString() });
             return output;
         }
 

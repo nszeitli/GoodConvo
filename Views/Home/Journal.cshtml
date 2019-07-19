@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
-    
+
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Journal";
@@ -21,6 +21,9 @@
         <div v-if="loading"><vue-typer text='Loading'></vue-typer></div>
 
         <div v-else>
+            <div class="top-buttons">
+                <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
+            </div>
             <div class="content">
                 <template v-for="item in items">
                     <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle"></gc-item>
@@ -29,28 +32,53 @@
             </div>
             <div v-if="!longresponse && !numresponse">
                 <div class="response">
-                    <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index"></gc-response>
+                    <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
                 </div>
             </div>
             <div v-if="longresponse">
                 <div class="response-long">
-                    <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index"></gc-response-long>
+                    <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
                 </div>
             </div>
             <div v-if="numresponse">
                 <div class="response-num">
-                    <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index"></gc-response-num>
+                    <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
                 </div>
             </div>
             <div class="submit">
                 <button v-on:click="postConversation()">Finish</button>
             </div>
         </div>
-        
+
     </section>
 </div>
 
+<script id="dropdown" type="x/template">
+    <div >
+        <div class="enclose-head">
+            <a href="#" v-on:click.prevent="showDropDown=!showDropDown">
+                <div class="dropdown-head">Talking to <br><b>Coach {{ selectedcoach }}</b></div>
+                <i :class="{ 'fa-caret-up': showDropDown, 'fa-caret-down': !showDropDown }" class="fa" aria-hidden="true"></i>
+            </a>
+            <br style="clear:both;" />
+        </div>
+        <div class="abs-pos" v-if="showDropDown">
+            <div class="switch-to">
+                Switch to
+            </div>
+                <ul class="menu list">
+                    <li v-for="link in coachlist" class="list">
+                        <a href="#" v-on:click="changecoach(link.name)" class="dropdown-item">{{ link.name }}</a>
+                    </li>
+                </ul>
+        </div>
+        
+    </div>
+</script>
+
+
 @section Scripts {
     <script src="~/js/coach.js"></script>
-    <link rel="stylesheet" href="~/css/Slider.css" />
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 }
