@@ -18,11 +18,15 @@ section {
     position: relative;
 }
 
+.top-buttons {
+    text-align: center;
+    vertical-align: middle;
+}
 
 
 .coach-dropdown {
-    
-    
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .enclose-head {
@@ -81,6 +85,31 @@ section {
     text-align: left;
     padding-left: 0;
     font-weight: bold;
+}
+
+.view-previous {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0.35em 0.6em;
+    border: 0.1em solid #000;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+    border-radius: 2px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 300;
+    color: #000;
+    transition: all 0.2s;
+    background-color: #f7f4f2;
+    width: 140px;
+    text-decoration: none;
+}
+
+.previous-button {
+    text-decoration: none;
+    font-weight: 300;
+    color: #000;
+    transition: all 0.2s;
+    background-color: #f7f4f2;
 }
 
 .fa {

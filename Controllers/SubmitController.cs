@@ -55,6 +55,7 @@ namespace GoodConvo.Controllers
 
                 int iCoach = 0;
                 int iUser = 0;
+                string coachName = "";
                 newConvo.QuestionsAsked = new List<Question>();
                 newConvo.ResponseList = new List<Response>();
 
@@ -62,6 +63,7 @@ namespace GoodConvo.Controllers
                 {
                     if(item.compstyle != null && item.compstyle.Contains("coach"))
                     {
+                        coachName = item.Author;
                         newConvo.QuestionsAsked.Add(new Question
                         {
                             Index = iCoach,
@@ -95,7 +97,10 @@ namespace GoodConvo.Controllers
                 }
                 newConvo.Document = doc;
                 //TODO add coach ref
+                coachName = coachName.Replace("Coach ", "");
+                var coach = _db.Coaches.FirstOrDefault(i => i.Name == coachName);
 
+                newConvo.Coach = coach;
 
                 _db.Conversations.Add(newConvo);
                 _db.SaveChanges();

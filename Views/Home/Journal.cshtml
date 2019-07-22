@@ -23,6 +23,7 @@
         <div v-else>
             <div class="top-buttons">
                 <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
+                <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate"></view-previous></div>
             </div>
             <div class="content">
                 <template v-for="item in items">

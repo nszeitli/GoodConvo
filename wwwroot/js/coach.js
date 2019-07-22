@@ -13,11 +13,15 @@ new Vue({
             loading: true,
             errored: false,
             items: null,
+            helditems: null,
             responsedata: null,
             finished: false,
             longresponse: false,
             numresponse: false,
-            index: 0,
+            viewprevious: false,
+            lastdate: " - ",
+            lastconvoitems:null,
+            index: 0
         }
     },
     
@@ -71,6 +75,18 @@ new Vue({
                     console.log(error)
                 });
             window.location.href = 'Journal/';
+        },
+        toggleviewprevious: function () {
+            this.viewprevious = !this.viewprevious;
+            console.log(this.viewprevious);
+
+            if (this.viewprevious) {
+                this.helditems = this.items;
+                this.items = this.lastconvoitems;
+            }
+            else {
+                this.items = this.helditems;
+            }
         }
     },
     mounted() {
@@ -107,6 +123,22 @@ new Vue({
             })
             .finally(() => this.loading = false)
 
+        axios
+            .get('/Conversations/GetLastConvo?coach=' + this.selectedcoach)
+            .then(response => {
+                if (response.data.itemList.length > 1) {
+                    this.lastconvoitems = response.data.itemList;
+                    this.lastdate = response.data.dateStr;
+                }
+                else {
+                    
+                }
+
+            })
+            .catch(error => {
+                console.log(error)
+                this.errored = true
+            })
     },
 });
 
@@ -242,6 +274,21 @@ Vue.component("dropdown-item", {
     methods: {
         changecoach: function () {
             this.$emit('changecoach', this.coachname);
+        }
+    }
+});
+
+Vue.component("view-previous", {
+    props: ['date'],
+    template: "<div  v-on:click=\"toggleviewprevious\" class=\"previous-button\">Last entry   <br style=\"clear: both;\" />{{ this.date }}</div>",
+    data() {
+        return {
+            showDropDown: false,
+        };
+    },
+    methods: {
+        toggleviewprevious: function () {
+            this.$emit('toggleviewprevious');
         }
     }
 });

@@ -8,6 +8,7 @@ using GoodConvo.Models.EntityModels;
 using GoodConvo.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,11 @@ namespace GoodConvo.Controllers
     public class StartController : ControllerBase
     {
         private JournalContext _context;
-        public StartController(JournalContext context)
+        private UserManager<ApplicationUser> _userManager;
+        public StartController(JournalContext context, UserManager<ApplicationUser> userManager)
         {
             this._context = context;
+            this._userManager = userManager;
         }
         
         // GET: api/Start

@@ -8,18 +8,22 @@ using Microsoft.EntityFrameworkCore;
 using GoodConvo.Models;
 using GoodConvo.Models.EntityModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using GoodConvo.Models.ViewModels;
 
 namespace GoodConvo.Controllers
 {
     [Authorize]
     public class ConversationsController : Controller
     {
-        private readonly JournalContext _context;
-
-        public ConversationsController(JournalContext context)
+        private JournalContext _context;
+        private UserManager<ApplicationUser> _userManager;
+        public ConversationsController(JournalContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            this._context = context;
+            this._userManager = userManager;
         }
+
 
         // GET: Conversations
         public async Task<IActionResult> Index()
@@ -33,6 +37,60 @@ namespace GoodConvo.Controllers
             list = list.Where(i => i.UserData.Email == User.Identity.Name).ToList();
 
             return View(list);
+        }
+
+        public async Task<ConversationVM> GetLastConvo([FromQuery] String coach)
+        {
+            if (coach == null)
+            {
+                return new ConversationVM();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            var conversation =  _context.Conversations
+                .Include(i => i.QuestionsAsked)
+                .Include(i => i.ResponseList)
+                .Include(i => i.Coach)
+                .OrderByDescending(e => e.DateTime)
+                .FirstOrDefault(m => m.UserData.Email == user.Email );
+            if (conversation == null)
+            {
+                return new ConversationVM();
+            }
+
+            string longStr = "Journal entry at " + DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + " by " + user.FirstName;
+
+            //build item list
+            List<GcItem> itemList = new List<GcItem>();
+            int q = 0;
+            foreach (var item in conversation.QuestionsAsked)
+            {
+                itemList.Add(new GcItem {
+                    Content = item.QuestionText,
+                    Author = conversation.Coach.Name,
+                    compstyle = "coach",
+                    Type = ""
+                });
+
+                var response = conversation.ResponseList[q];
+                itemList.Add(new GcItem
+                {
+                    Content = response.IsTextResponse ? response.TextResponse : response.NumResponse.ToString(),
+                    Author = conversation.Coach.Name,
+                    compstyle = "",
+                    Type = ""
+                });
+            }
+
+            var vm = new ConversationVM
+            {
+                DateStr = conversation.DateTime.ToShortDateString(),
+                ItemList = itemList,
+                LongDateStr = longStr
+            };
+
+            return vm;
         }
 
         // GET: Conversations/Details/5
@@ -52,6 +110,8 @@ namespace GoodConvo.Controllers
 
             return View(conversation);
         }
+
+
 
         // GET: Conversations/Create
         public IActionResult Create()
