@@ -53,12 +53,13 @@ namespace GoodConvo.Controllers
                 .Include(i => i.ResponseList)
                 .Include(i => i.Coach)
                 .OrderByDescending(e => e.DateTime)
-                .FirstOrDefault(m => m.UserData.Email == user.Email );
+                .FirstOrDefault(m => m.UserData.Email == user.Email && m.inProgress == false && m.Coach.Name.ToLower() == coach.ToLower());
             if (conversation == null)
             {
                 return new ConversationVM();
             }
-
+            conversation.QuestionsAsked = conversation.QuestionsAsked.OrderBy(i => i.Index).ToList();
+            conversation.ResponseList = conversation.ResponseList.OrderBy(i => i.Index).ToList();
             string longStr = "Journal entry at " + DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + " by " + user.FirstName;
 
             //build item list
@@ -72,15 +73,19 @@ namespace GoodConvo.Controllers
                     compstyle = "coach",
                     Type = ""
                 });
-
-                var response = conversation.ResponseList[q];
-                itemList.Add(new GcItem
+                if(q < conversation.ResponseList.Count)
                 {
-                    Content = response.IsTextResponse ? response.TextResponse : response.NumResponse.ToString(),
-                    Author = conversation.Coach.Name,
-                    compstyle = "",
-                    Type = ""
-                });
+                    var response = conversation.ResponseList[q];
+                    itemList.Add(new GcItem
+                    {
+                        Content = response.IsTextResponse ? response.TextResponse : response.NumResponse.ToString(),
+                        Author = conversation.Coach.Name,
+                        compstyle = "",
+                        Type = ""
+                    });
+                    
+                }
+                q++;
             }
 
             var vm = new ConversationVM

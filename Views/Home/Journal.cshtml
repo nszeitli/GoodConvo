@@ -12,7 +12,7 @@
     }
 
 }
-<div id="app">
+<div id="app" class="body-content-app">
     <section v-if="errored">
         <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
     </section>
@@ -23,7 +23,9 @@
         <div v-else>
             <div class="top-buttons">
                 <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
-                <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate"></view-previous></div>
+                <template v-if="viewpreviousenabled">
+                    <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate" v-bind:viewprevious="viewprevious"></view-previous></div>
+                </template>
             </div>
             <div class="content">
                 <template v-for="item in items">
@@ -31,35 +33,39 @@
                 </template>
 
             </div>
-            <div v-if="!longresponse && !numresponse">
-                <div class="response">
-                    <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
+            <div class="input-section">
+                <div v-if="!longresponse && !numresponse">
+                    <div class="response">
+                        <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
+                        <div style="clear: both;"></div>
+                    </div>
                 </div>
-            </div>
-            <div v-if="longresponse">
-                <div class="response-long">
-                    <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
+                <div v-if="longresponse">
+                    <div class="response-long">
+                        <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
+                        <div style="clear: both;"></div>
+                    </div>
                 </div>
-            </div>
-            <div v-if="numresponse">
-                <div class="response-num">
-                    <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
+                <div v-if="numresponse">
+                    <div class="response-num">
+                        <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
+                        <div style="clear: both;"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="submit">
-                <button v-on:click="postConversation()">Finish</button>
+
             </div>
         </div>
-
+        <i class="fa fa-pen"></i>
     </section>
 </div>
+
 
 <script id="dropdown" type="x/template">
     <div >
         <div class="enclose-head">
             <a href="#" v-on:click.prevent="showDropDown=!showDropDown">
                 <div class="dropdown-head">Talking to <br><b>Coach {{ selectedcoach }}</b></div>
-                <i :class="{ 'fa-caret-up': showDropDown, 'fa-caret-down': !showDropDown }" class="fa" aria-hidden="true"></i>
+                <i :class="{ 'fa-caret-up': showDropDown, 'fa-caret-down': !showDropDown }" class="fa" aria-hidden="true" id="fa-menu"></i>
             </a>
             <br style="clear:both;" />
         </div>
@@ -77,9 +83,31 @@
     </div>
 </script>
 
+<script id="previous" type="x/template">
+    <div>
+        <a href="#" v-on:click.prevent="leftcaret=!leftcaret">
+            <div v-on:click="toggleviewprevious" class="previous-button">
+                <div class="previous-text">
+                    <template v-if="leftcaret">
+                        Back to
+                        <br style="clear: both;" />today's entry
+                    </template>
+                    <template v-else>
+                        View last entry
+                        <br style="clear: both;" />{{ this.date }}
+                    </template>
+                </div>
+                <a href="#"><i :class="{ 'fa-caret-left': !leftcaret, 'fa-caret-right': leftcaret }" class="fa" aria-hidden="true" id="fa-menu"></i></a>
+
+            </div>
+        </a>
+        
+    </div>
+</script>
+
 
 @section Scripts {
     <script src="~/js/coach.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 }

@@ -1,5 +1,4 @@
-﻿
-var VueTyperPlugin = window.VueTyper.default
+﻿var VueTyperPlugin = window.VueTyper.default
 
 Vue.use(VueTyperPlugin);
 
@@ -18,6 +17,7 @@ new Vue({
             finished: false,
             longresponse: false,
             numresponse: false,
+            viewpreviousenabled: false,
             viewprevious: false,
             lastdate: " - ",
             lastconvoitems:null,
@@ -64,6 +64,24 @@ new Vue({
                     console.log(error)
                     this.errored = true
                 })
+
+            axios
+                .get('/Conversations/GetLastConvo?coach=' + this.selectedcoach)
+                .then(response => {
+                    if (response.data.itemList != null && response.data.itemList.length > 1){
+                        this.lastconvoitems = response.data.itemList;
+                        this.lastdate = response.data.dateStr;
+                        this.viewpreviousenabled = true;
+                    }
+                    else {
+                        this.viewpreviousenabled = false;
+                    }
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errored = true
+                })
                 .finally(() => this.loading = false)
 
         },
@@ -80,13 +98,16 @@ new Vue({
             this.viewprevious = !this.viewprevious;
             console.log(this.viewprevious);
 
-            if (this.viewprevious) {
-                this.helditems = this.items;
-                this.items = this.lastconvoitems;
+            if (this.lastconvoitems != undefined || this.lastconvoitems != null) {
+                if (this.viewprevious) {
+                    this.helditems = this.items;
+                    this.items = this.lastconvoitems;
+                }
+                else {
+                    this.items = this.helditems;
+                }
             }
-            else {
-                this.items = this.helditems;
-            }
+            
         }
     },
     mounted() {
@@ -126,12 +147,13 @@ new Vue({
         axios
             .get('/Conversations/GetLastConvo?coach=' + this.selectedcoach)
             .then(response => {
-                if (response.data.itemList.length > 1) {
+                if (response.data.itemList != null || response.data.itemList.length > 1) {
                     this.lastconvoitems = response.data.itemList;
                     this.lastdate = response.data.dateStr;
+                    this.viewpreviousenabled = true;
                 }
                 else {
-                    
+                    this.viewpreviousenabled = false;
                 }
 
             })
@@ -175,7 +197,7 @@ Vue.component('gc-response', {
             this.input = "";
         }
     },
-    template: '<div class="gc-response"><span class="gc-input-label"></span><input class="gc-entry" type=\'text\' id=\'input1\' v-model="input"></input><button id="submit" v-on:click="handleSubmit">Done</button></div>'
+    template: '<div class="gc-response"><input class="gc-entry" type=\'text\' id=\'input1\' v-model="input"></input><button id="submit" v-on:click="handleSubmit"> <i class="fa fa-pencil"></i></button></div>'
 });
 
 Vue.component('gc-response-long', {
@@ -204,7 +226,7 @@ Vue.component('gc-response-long', {
             this.input = "";
         }
     },
-    template: '<div class="gc-response"><span class="gc-input-label"></span><textarea rows="4" cols="50" class="gc-entry" type=\'text\' id=\'input1\' v-model="input"></textarea><button id="submit" v-on:click="handleSubmit">Done</button></div>'
+    template: '<div class="gc-response"><span class="gc-input-label"></span><textarea rows="4" cols="50" class="gc-entry" type=\'text\' id=\'input1\' v-model="input"></textarea><button id="submit" v-on:click="handleSubmit"><i class="fa fa-pencil"></i></button></div>'
 });
 
 Vue.component('gc-response-num', {
@@ -243,7 +265,7 @@ Vue.component('gc-response-num', {
             }
         }
     },
-    template: '<div class="gc-response"><span class="gc-input-label">Num only</span><input class="gc-entry-num" type=\'text\' id=\'input-num\' v-model="input" @keypress="isNumber($event)"></input><button id="submit" v-on:click="handleSubmit">Done</button></div>'
+    template: '<div class="gc-response"><span class="gc-input-label">Num only</span><input class="gc-entry-num" type=\'text\' id=\'input-num\' v-model="input" @keypress="isNumber($event)"></input><button id="submit" v-on:click="handleSubmit"><i class="fa fa-pencil" ></i></button></div>'
 });
 
 
@@ -279,11 +301,11 @@ Vue.component("dropdown-item", {
 });
 
 Vue.component("view-previous", {
-    props: ['date'],
-    template: "<div  v-on:click=\"toggleviewprevious\" class=\"previous-button\">Last entry   <br style=\"clear: both;\" />{{ this.date }}</div>",
+    props: ['date', 'viewprevious'],
+    template: "#previous",
     data() {
         return {
-            showDropDown: false,
+            leftcaret: this.viewprevious
         };
     },
     methods: {

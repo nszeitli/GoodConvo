@@ -18,9 +18,29 @@ section {
     position: relative;
 }
 
+.body-content {
+    text-align: center;
+    align-items: center;
+}
+
+.body-content-app {
+    max-width: 720px;
+    text-align: center;
+    margin: 0 auto 0 auto;
+}
+
+#app {
+    
+}
+
+.content {
+    text-align: left;
+}
+
 .top-buttons {
     text-align: center;
     vertical-align: middle;
+
 }
 
 
@@ -44,11 +64,15 @@ section {
 }
 
 .dropdown-head {
-    
-
+    font-weight: 300;
+    color: #000;
     width: 90%;
     float: left;
-    
+}
+
+.dropdown-item {
+    font-weight: 300;
+    color: #000;
 }
 
 .switch-to {
@@ -69,20 +93,21 @@ section {
     color: #000;
     transition: all 0.2s;
     background-color: #f7f4f2;
-    text-align: left;
+    text-align: center;
     width: 140px;
 }
 
 .menu {
     text-align: left;
-    
+    font-weight: 300;
+    color: #000;
 }
 
 
 
 .list {
     list-style-type: none;
-    text-align: left;
+    text-align: center;
     padding-left: 0;
     font-weight: bold;
 }
@@ -112,12 +137,30 @@ section {
     background-color: #f7f4f2;
 }
 
+.previous-text {
+    width: 90%;
+    float: left;
+}
+
 .fa {
+    font-size: 20px;
+}
+
+#fa-menu {
     width: 10%;
     float: right;
-    margin-top: 8px;
+    margin-top: 10px;
     font-size: 20px !important;
 }
+
+.fa-pencil {
+    color: #337ab7;
+    font-size: 24px !important;
+}
+
+
+
+
 .content {
     margin-bottom: 10px;
 }
@@ -161,6 +204,7 @@ section {
     padding-top: 5px;
     padding-bottom: 5px;
     color: #000 !important;
+    display: flex;
 
 }
 
@@ -169,6 +213,18 @@ section {
     font-size: 12px;
     line-height: 1.2;
     margin-left: 5px;
+}
+
+.gc-entry {
+    float: left;
+    width: 80%;
+    display: block;
+}
+
+#submit {
+    float: right;
+    width: 15%;
+    margin: 0 0.3em 0 0.3em;
 }
 
 button {
@@ -208,7 +264,6 @@ Input {
     margin: 10px;
     padding: 10px 10px 10px 10px;
     margin: 0 .25rem;
-    min-width: 325px;
     border: 1px solid #eee;
     border-radius: 2px;
     transition: border-color .5s ease-out;
@@ -249,4 +304,25 @@ Input {
     }
 }
 
+@media only screen and (max-width: 400px) {
+    section {
+        padding: 2px;
+    }
+
+    button {
+        padding: 0.2em 0.6em;
+    }
+
+    .fa-pencil {
+        font-size: 18px !important;
+    }
+
+    Input {
+        padding: 5px;
+    }
+
+    #submit {
+        margin: 0;
+    }
+}
 

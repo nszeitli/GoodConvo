@@ -30,12 +30,66 @@ namespace GoodConvo.Controllers
         {
             //get coach
             GcItem output = new GcItem();
-            var c = _context.Coaches.Include(j => j.QuestionList).Where(i => i.Name.ToLower() == coach.ToLower()).ToList()[0];
-            if (c == null) { output = new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }; return output; }
-            if (index >= c.QuestionList.Count ) { return new GcItem { Content = "Thats all I have today, come back tomorrow", Author = "Coach " + c.Name, compstyle = "coach", Type = "Final" }; }
+
+            //update convo
+            Conversation convo = null;
+            Coach c = null;
+            if (HttpContext.Session.IsAvailable && HttpContext.Session.Keys.Contains("convo-" + coach))
+            {
+                string convoId = HttpContext.Session.GetString("convo-" + coach);
+                if (convoId != null) {
+                    convo = _context.Conversations
+                        .Include(i => i.QuestionsAsked)
+                        .Include(i => i.ResponseList)
+                        .Include(i => i.Coach)
+                        .ThenInclude(coachItem => coachItem.QuestionList)
+
+                        .OrderByDescending(e => e.DateTime)
+                        .Where(i => i.SessionTag == convoId).SingleOrDefault();
+                    convo.ResponseList.Add(new Response
+                    {
+                        Index = index,
+                        IsTextResponse = true,
+                        TextResponse = value
+                    });
+
+                    c = convo.Coach;
+                }
+                
+            }
+            else
+            {
+                //no convo...request client to send data
+                return new GcItem { Content = "Thats all I have today, ive safely saved your journal entries.", Author = "Coach " + c.Name, compstyle = "coach", Type = "Final" };
+            }
+
+
+            if (index >= c.QuestionList.Count )
+            {
+                //submit
+                convo.QuestionsAsked.Add(new Question
+                {
+                    Index = index +1,
+                    QuestionText = "Thats all I have today, come back tomorrow",
+                    Type = QuestionType.Text
+                });
+                convo.inProgress = false;
+                _context.SaveChangesAsync();
+
+                return new GcItem { Content = "Thats all I have today, ive safely saved your journal entries.", Author = "Coach " + c.Name, compstyle = "coach", Type = "Final" };
+            }
             else
             {
                 Question nextQ = c.QuestionList[index];
+
+                convo.QuestionsAsked.Add(new Question
+                {
+                    Index = index + 1,
+                    QuestionText = nextQ.QuestionText,
+                    Type = nextQ.Type
+                });
+                _context.SaveChangesAsync();
+
                 return new GcItem { Content = nextQ.QuestionText, Author = "Coach " + c.Name, compstyle = "coach", Type = nextQ.Type.ToString() };
             }
 

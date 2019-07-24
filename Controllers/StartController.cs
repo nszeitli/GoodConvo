@@ -36,7 +36,37 @@ namespace GoodConvo.Controllers
             var cq = _context.Coaches.Include(j => j.QuestionList).Where(i => i.Name.ToLower() == coach.ToLower()).ToList();
             if (cq == null) { output.Add(new GcItem { Content = "Something got scrambled, refresh the browser", Author = coach, compstyle = "coach" }); return output; }
             Question nextQ = cq[0].QuestionList[0];
-            
+
+            //new convo
+            UserData user = new UserData
+            {
+                Email = User.Identity.Name,
+                FirstName = User.Identity.Name
+            };
+
+            var convo = new Conversation
+            {
+                UserData = user,
+                DateTime = DateTime.Now
+            };
+
+            convo.QuestionsAsked = new List<Question>();
+            convo.ResponseList = new List<Response>();
+
+            convo.inProgress = true;
+            convo.Coach = cq[0];
+
+            convo.QuestionsAsked.Add(new Question
+            {
+                Index = 1,
+                QuestionText = nextQ.QuestionText,
+                Type = nextQ.Type
+            });
+
+            convo.SessionTag = Guid.NewGuid().ToString();
+            _context.Conversations.Add(convo);
+            HttpContext.Session.SetString("convo-" + coach, convo.SessionTag);
+            _context.SaveChanges();
             output.Add(new GcItem { Content = nextQ.QuestionText, Author = "Coach " + cq[0].Name, compstyle = "coach", Type = nextQ.Type.ToString() });
             return output;
         }

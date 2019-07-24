@@ -12,5 +12,6 @@ namespace GoodConvo.Models.EntityModels
         public String FirstName { get; set; }
 
         public virtual List<Conversation> PreviousConversations { get; set; }
+
     }
 }

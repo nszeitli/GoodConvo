@@ -4,14 +4,16 @@ using GoodConvo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GoodConvo.Migrations
 {
     [DbContext(typeof(JournalContext))]
-    partial class JournalContextModelSnapshot : ModelSnapshot
+    [Migration("20190724015137_inprogressbool")]
+    partial class inprogressbool
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,8 +49,6 @@ namespace GoodConvo.Migrations
                     b.Property<DateTime>("DateTime");
 
                     b.Property<string>("Document");
-
-                    b.Property<string>("SessionTag");
 
                     b.Property<int?>("UserDataId");
 

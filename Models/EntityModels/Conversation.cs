@@ -11,6 +11,8 @@ namespace GoodConvo.Models.EntityModels
         public DateTime DateTime { get; set; }
         public String Document { get; set; }
 
+        public bool inProgress { get; set; }
+        public string SessionTag { get; set; }
         public virtual Coach Coach { get; set; }
         public virtual UserData UserData { get; set; }
 

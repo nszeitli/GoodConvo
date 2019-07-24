@@ -31,9 +31,13 @@ namespace GoodConvo
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+
+
+
             var connection = @"Data Source=SQL5042.site4now.net;Initial Catalog=DB_A4427A_journal;User Id=DB_A4427A_journal_admin;Password=!Akarma464;";
             services.AddDbContext<ApplicationDbContext>
                 (options => options.UseSqlServer(connection));
@@ -46,6 +50,15 @@ namespace GoodConvo
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(1000);
+                options.Cookie.HttpOnly = true;
+            });
+
             connection = @"Data Source=SQL5042.site4now.net;Initial Catalog=DB_A4427A_journal;User Id=DB_A4427A_journal_admin;Password=!Akarma464;";
             services.AddDbContext<JournalContext>
                 (options => options.UseSqlServer(connection));
@@ -56,6 +69,8 @@ namespace GoodConvo
             IHostingEnvironment env, ApplicationDbContext context,
             RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, JournalContext jcontext)
         {
+            app.UseSession();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -72,6 +87,8 @@ namespace GoodConvo
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            
 
             app.UseMvc(routes =>
             {
