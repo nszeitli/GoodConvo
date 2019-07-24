@@ -12,56 +12,92 @@
     }
 
 }
-<div id="app" class="body-content-app">
-    <section v-if="errored">
-        <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
-    </section>
+    <div id="app" class="body-content-app">
+        <section v-if="errored">
+            <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+        </section>
+        
+        <section v-else>
+            
+                <div v-if="loading"></div>
 
-    <section v-else>
-        <div v-if="loading"><vue-typer text='Loading'></vue-typer></div>
+                <div v-else>
 
-        <div v-else>
-            <div class="top-buttons">
-                <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
-                <template v-if="viewpreviousenabled">
-                    <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate" v-bind:viewprevious="viewprevious"></view-previous></div>
-                </template>
-            </div>
-            <div class="content">
-                <template v-for="item in items">
-                    <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle"></gc-item>
-                </template>
-
-            </div>
-            <div class="input-section">
-                <div v-if="!longresponse && !numresponse">
-                    <div class="response">
-                        <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
-                        <div style="clear: both;"></div>
+                    <div class="top-buttons">
+                        <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
+                        <template v-if="viewpreviousenabled">
+                            <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate" v-bind:viewprevious="viewprevious"></view-previous></div>
+                        </template>
                     </div>
-                </div>
-                <div v-if="longresponse">
-                    <div class="response-long">
-                        <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
-                        <div style="clear: both;"></div>
+                    <div class="content">
+                        <template v-if="!viewprevious">
+                            <transition-group name="list" tag="div">
+                                <div v-for="(item, index) in items" v-bind:key="item.content" class="list-item">
+                                    <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle" v-bind:viewprevious="viewprevious"></gc-item>
+                                </div>
+                            </transition-group>
+                        </template>
+                        <template v-else>
+                            <transition-group name="previous" tag="div">
+                                <div v-for="(item, index) in items" v-bind:key="item.content" class="previous-item">
+                                    <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle" v-bind:viewprevious="viewprevious"></gc-item>
+                                </div>
+                            </transition-group>
+                        </template>
                     </div>
-                </div>
-                <div v-if="numresponse">
-                    <div class="response-num">
-                        <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
-                        <div style="clear: both;"></div>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-        <i class="fa fa-pen"></i>
-    </section>
+                    <template v-if="viewprevious">
+
+                    </template>
+                    <template v-else>
+                        <div class="input-section">
+                            <div v-if="!longresponse && !numresponse">
+                                <div class="response">
+                                    <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </div>
+                            <div v-if="longresponse">
+                                <div class="response-long">
+                                    <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </div>
+                            <div v-if="numresponse">
+                                <div class="response-num">
+                                    <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </template>
+
+                </div>
+                <i class="fa fa-pen"></i>
+            
+        </section>
+        
 </div>
+
+    <script id="gc-item-comp" type="x/template">
+            <div class="gc-item">
+                <div class="gc-author">{{ author }}</div>
+                <div class="gc-content">
+                    <template v-if="!viewprevious">
+                        {{ content }}
+                    </template>
+                    <template v-else>
+                        {{ content }}
+                    </template>
+                </div>
+            </div>
+
+    </script>
 
 
 <script id="dropdown" type="x/template">
-    <div >
+    <div>
         <div class="enclose-head">
             <a href="#" v-on:click.prevent="showDropDown=!showDropDown">
                 <div class="dropdown-head">Talking to <br><b>Coach {{ selectedcoach }}</b></div>
@@ -73,13 +109,13 @@
             <div class="switch-to">
                 Switch to
             </div>
-                <ul class="menu list">
-                    <li v-for="link in coachlist" class="list">
-                        <a href="#" v-on:click="changecoach(link.name)" class="dropdown-item">{{ link.name }}</a>
-                    </li>
-                </ul>
+            <ul class="menu list">
+                <li v-for="link in coachlist" class="list">
+                    <a href="#" v-on:click="changecoach(link.name)" class="dropdown-item">{{ link.name }}</a>
+                </li>
+            </ul>
         </div>
-        
+
     </div>
 </script>
 
@@ -94,14 +130,15 @@
                     </template>
                     <template v-else>
                         View last entry
-                        <br style="clear: both;" />{{ this.date }}
+                        <br style="clear: both;" />
+                        <div class="date-text-sm">{{ this.date }}</div>
                     </template>
                 </div>
                 <a href="#"><i :class="{ 'fa-caret-left': !leftcaret, 'fa-caret-right': leftcaret }" class="fa" aria-hidden="true" id="fa-menu"></i></a>
 
             </div>
         </a>
-        
+
     </div>
 </script>
 
@@ -109,5 +146,5 @@
 @section Scripts {
     <script src="~/js/coach.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    
+    <link href="~/css/animations.css" rel="stylesheet" />
 }

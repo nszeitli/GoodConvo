@@ -69,7 +69,7 @@ namespace GoodConvo.Controllers
             {
                 itemList.Add(new GcItem {
                     Content = item.QuestionText,
-                    Author = conversation.Coach.Name,
+                    Author = "Coach " + conversation.Coach.Name,
                     compstyle = "coach",
                     Type = ""
                 });
@@ -79,7 +79,7 @@ namespace GoodConvo.Controllers
                     itemList.Add(new GcItem
                     {
                         Content = response.IsTextResponse ? response.TextResponse : response.NumResponse.ToString(),
-                        Author = conversation.Coach.Name,
+                        Author = user.FirstName,
                         compstyle = "",
                         Type = ""
                     });

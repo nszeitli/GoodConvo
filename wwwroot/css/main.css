@@ -47,6 +47,7 @@ section {
 .coach-dropdown {
     display: inline-block;
     vertical-align: middle;
+    max-height: 61px;
 }
 
 .enclose-head {
@@ -126,7 +127,12 @@ section {
     transition: all 0.2s;
     background-color: #f7f4f2;
     width: 140px;
+    height: 53px;
     text-decoration: none;
+}
+
+.date-text-sm {
+    font-size: 12px;
 }
 
 .previous-button {

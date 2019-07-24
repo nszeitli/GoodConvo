@@ -47,6 +47,7 @@ new Vue({
             
         },
         changecoach: function (newcoach) {
+            this.loading = true;
             this.selectedcoach = newcoach;
             axios
                 .get('/api/Start?coach=' + newcoach)
@@ -97,7 +98,7 @@ new Vue({
         toggleviewprevious: function () {
             this.viewprevious = !this.viewprevious;
             console.log(this.viewprevious);
-
+/*
             if (this.lastconvoitems != undefined || this.lastconvoitems != null) {
                 if (this.viewprevious) {
                     this.helditems = this.items;
@@ -106,7 +107,7 @@ new Vue({
                 else {
                     this.items = this.helditems;
                 }
-            }
+            }*/
             
         }
     },
@@ -166,8 +167,8 @@ new Vue({
 
 Vue.component('gc-item', {
     // camelCase in JavaScript
-    props: ['content', 'author', 'compstyle'],
-    template: '<div class="gc-item"><div class="gc-author">{{ author }}</div><div class="gc-content">{{ content }}</div></div>'
+    props: ['content', 'author', 'compstyle', 'viewprevious', 'lastitem'],
+    template: '#gc-item-comp'
 });
 
 Vue.component('gc-response', {
