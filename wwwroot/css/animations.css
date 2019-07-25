@@ -1,43 +1,46 @@
 ﻿
 .slide-leave-active,
 .slide-enter-active {
-    transition: 3s;
+    position: absolute;
+    transition: 1s;
 }
 
 .slide-enter {
+    position: absolute;
     transform: translate(100%, 0);
 }
 
 .slide-leave-to {
-    transform: translate(-100%, 0);
+    display: none;
 }
 
-.slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
 
-.list-enter-active, .list-leave-active {
+/*, .list-leave-active */
+
+    .slideup-enter-active {
     transition: all 1s;
 }
 
-.list-enter /* .list-leave-active below version 2.1.8 */ {
+.slideup-enter /* .list-leave-active below version 2.1.8 */ {
     opacity: 0;
     transform: translateY(30px);
 }
 
-.previous-enter-active, .previous-leave-active {
-    transition: all 1s;
+.fade-enter-active {
+    transition: opacity 1.0s;
+ 
+}
+.fade-leave-active {
+    position: absolute;
+    display: none;
 }
 
-.previous-enter /* .list-leave-active below version 2.1.8 */ {
+.fade-enter /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
-    transform: translateX(230px);
 }
-
-
+.fade-leave-to {
+    position: absolute;
+    display: none;
+}
 
 

@@ -18,82 +18,125 @@
         </section>
         
         <section v-else>
-            
+            <transition appear name="fade">
                 <div v-if="loading"></div>
 
                 <div v-else>
+                    <transition appear name="fade">
+                        <div class="top-buttons">
 
-                    <div class="top-buttons">
-                        <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
-                        <template v-if="viewpreviousenabled">
-                            <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate" v-bind:viewprevious="viewprevious"></view-previous></div>
-                        </template>
-                    </div>
-                    <div class="content">
-                        <template v-if="!viewprevious">
-                            <transition-group name="list" tag="div">
-                                <div v-for="(item, index) in items" v-bind:key="item.content" class="list-item">
-                                    <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle" v-bind:viewprevious="viewprevious"></gc-item>
-                                </div>
-                            </transition-group>
-                        </template>
-                        <template v-else>
-                            <transition-group name="previous" tag="div">
-                                <div v-for="(item, index) in items" v-bind:key="item.content" class="previous-item">
-                                    <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle" v-bind:viewprevious="viewprevious"></gc-item>
-                                </div>
-                            </transition-group>
-                        </template>
-                    </div>
-
-                    <template v-if="viewprevious">
-
-                    </template>
-                    <template v-else>
-                        <div class="input-section">
-                            <div v-if="!longresponse && !numresponse">
-                                <div class="response">
-                                    <gc-response v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
-                                    <div style="clear: both;"></div>
-                                </div>
-                            </div>
-                            <div v-if="longresponse">
-                                <div class="response-long">
-                                    <gc-response-long v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
-                                    <div style="clear: both;"></div>
-                                </div>
-                            </div>
-                            <div v-if="numresponse">
-                                <div class="response-num">
-                                    <gc-response-num v-on:eventname="updateparent($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
-                                    <div style="clear: both;"></div>
-                                </div>
-                            </div>
+                            <div class="coach-dropdown"><dropdown v-on:changecoach="changecoach($event)" v-bind:selectedcoach="selectedcoach" v-bind:coachlist="coachlist"></dropdown></div>
+                            <template v-if="viewpreviousenabled">
+                                <div class="view-previous"><view-previous v-on:toggleviewprevious="toggleviewprevious()" v-bind:date="lastdate" v-bind:viewprevious="viewprevious"></view-previous></div>
+                            </template>
 
                         </div>
-                    </template>
+                    </transition>
+                    <div class="content">
+                        <transition appear name="fade">
+                            <template v-if="!viewprevious">
+                                <gc-list v-bind:items="items" v-bind:lastcoachitem="lastcoachitem" v-bind:lastitem="lastitem"></gc-list>
+                            </template>
+                            <template v-else>
+                                <gc-list-previous v-bind:items="lastconvoitems"></gc-list-previous>
+                            </template>
+                        </transition>
+                    </div>
+                    <transition appear name="fade">
+                        <template v-if="viewprevious">
+                            <!--- No input for viewprevious --->
+                        </template>
 
+                        <template v-else>
+                            <div class="input-section">
+
+                                <div v-if="!longresponse && !numresponse">
+                                    <div class="response">
+                                        <gc-response v-on:newresponse="newresponse($event)" v-on:newcoachresponse="newcoachresponse($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response>
+                                        <div style="clear: both;"></div>
+                                    </div>
+                                </div>
+
+                                <div v-if="longresponse">
+                                    <div class="response-long">
+                                        <gc-response-long v-on:newresponse="newresponse($event)" v-on:newcoachresponse="newcoachresponse($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-long>
+                                        <div style="clear: both;"></div>
+                                    </div>
+                                </div>
+
+                                <div v-if="numresponse">
+                                    <div class="response-num">
+                                        <gc-response-num v-on:newresponse="newresponse($event)" v-on:newcoachresponse="newcoachresponse($event)" author="@userName" v-bind:index="index" v-bind:coach="selectedcoach"></gc-response-num>
+                                        <div style="clear: both;"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </template>
+                    </transition>
                 </div>
-                <i class="fa fa-pen"></i>
-            
+            </transition>
         </section>
         
 </div>
 
-    <script id="gc-item-comp" type="x/template">
-            <div class="gc-item">
-                <div class="gc-author">{{ author }}</div>
-                <div class="gc-content">
-                    <template v-if="!viewprevious">
-                        {{ content }}
-                    </template>
-                    <template v-else>
-                        {{ content }}
-                    </template>
-                </div>
+    <script id="gc-list-comp" type="x/template">
+        <div>
+            <template v-if="items!==null">
+                <transition-group name="slideup" tag="div">
+                    <div v-for="(item, index) in items" v-bind:key="item.content + item.index" class="list-item">
+                        <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle" v-bind:viewprevious="false"></gc-item>
+                    </div>
+                </transition-group>
+            </template>
+        </div>
+    </script>
+
+    <script id="gc-list-previous-comp" type="x/template">
+        <div>
+            <div v-for="(item, index) in items" v-bind:key="item.content + item.index" class="list-item">
+                <gc-item v-bind:content="item.content" v-bind:author="item.author" :class="item.compstyle" v-bind:viewprevious="true"></gc-item>
             </div>
+        </div>
 
     </script>
+
+    <script id="gc-last-comp" type="x/template">
+        <div class="gc-item">
+            <div class="gc-author">{{ author }}</div>
+            <div class="gc-content">
+
+                    {{ content }}
+
+            </div>
+        </div>
+
+    </script>
+
+    <script id="gc-last-coach-comp" type="x/template">
+        <div class="gc-item">
+            <div class="gc-author">{{ author }}</div>
+            <div class="gc-content">
+                    {{ content }}
+            </div>
+        </div>
+
+    </script>
+
+<script id="gc-item-comp" type="x/template">
+        <div class="gc-item">
+            <div class="gc-author">{{ author }}</div>
+            <div class="gc-content">
+                <template v-if="!viewprevious">
+                    {{ content }}
+                </template>
+                <template v-else>
+                    {{ content }}
+                </template>
+            </div>
+        </div>
+
+</script>
 
 
 <script id="dropdown" type="x/template">

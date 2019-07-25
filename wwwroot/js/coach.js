@@ -21,30 +21,51 @@ new Vue({
             viewprevious: false,
             lastdate: " - ",
             lastconvoitems:null,
-            index: 0
+            index: 0,
+            lastitem: null,
+            lastcoachitem: null
         }
     },
     
     methods: {
-        updateparent: function (item) {
+        newresponse: function (item) {
+            //User has sent a new response
+            if (this.finished) {
+                //play some animation
+            }
+            else {
+                if (this.lastitem !== null) {
+                    this.items.push(this.lastitem);
+                }
+                this.lastitem = item;
+                this.items.push(item);
+                if (this.lastcoachitem !== null) {
+                    if (this.lastcoachitem.content.includes("Thats all I have")) {
+                        this.finished = true;
+                    }
+                }
+                this.index++;
+            }
+            
+        },
+        newcoachresponse: function (item) {
+            //Coach has sent a new response
             if (this.finished) {
 
             }
             else {
                 if (item.type !== undefined) {
+                    //set response type
                     this.longresponse = false;
                     this.numresponse = false;
                     if (item.type == 'LongText') { this.longresponse = true; }
                     if (item.type == 'Numerical') { this.numresponse = true; }
                 }
-                this.items.push(item);
-                this.index++;
                 
-                if (item.content.includes("Thats all I have")) {
-                    this.finished = true;
-                }
+                this.lastcoachitem = item;
+                this.items.push(item);
             }
-            
+
         },
         changecoach: function (newcoach) {
             this.loading = true;
@@ -133,10 +154,10 @@ new Vue({
             .get('/api/Start?coach=' + this.selectedcoach)
             .then(response => {
                 console.log(response)
-                this.items = response.data
-                var lastItem = this.items[this.items.length - 1];
-                if (lastItem.type == 'LongText') { this.longresponse = true; }
-                if (lastItem.type == 'Numerical') { this.numresponse = true; }
+                this.items = response.data;
+                this.lastcoachitem = response.data[0];
+                if (this.lastcoachitem.type == 'LongText') { this.longresponse = true; }
+                if (this.lastcoachitem.type == 'Numerical') { this.numresponse = true; }
                 this.index++;
             })
             .catch(error => {
@@ -165,10 +186,33 @@ new Vue({
     },
 });
 
+Vue.component('gc-list', {
+    // camelCase in JavaScript
+    props: ['items', 'compstyle', 'lastitem', 'lastcoachitem'],
+    template: '#gc-list-comp'
+});
+
+Vue.component('gc-list-previous', {
+    // camelCase in JavaScript
+    props: ['items', 'compstyle'],
+    template: '#gc-list-previous-comp'
+});
+
 Vue.component('gc-item', {
     // camelCase in JavaScript
     props: ['content', 'author', 'compstyle', 'viewprevious', 'lastitem'],
     template: '#gc-item-comp'
+});
+
+Vue.component('gc-last-coach', {
+    // camelCase in JavaScript
+    props: ['content', 'author', 'compstyle', ],
+    template: '#gc-last-coach-comp'
+});
+Vue.component('gc-last', {
+    // camelCase in JavaScript
+    props: ['content', 'author', 'compstyle'],
+    template: '#gc-last-comp'
 });
 
 Vue.component('gc-response', {
@@ -181,16 +225,20 @@ Vue.component('gc-response', {
     },
     methods: {
         handleSubmit: function () {
+
+            //send user response
             var toSend = this.input;
             var item = { content: "content", author: this.author };
 
             item.content = toSend;
-            this.$emit('eventname', item);
+            this.$emit('newresponse', item);
+
+            //send coach response
             var a = this;
             axios.get("/api/Response/?value=" + toSend + "&coach=" + this.coach + "&index=" + this.index)
                 .then(function (response) {
  
-                    a.$emit('eventname', response.data)
+                    a.$emit('newcoachresponse', response.data)
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
@@ -202,7 +250,7 @@ Vue.component('gc-response', {
 });
 
 Vue.component('gc-response-long', {
-    props: ['content', 'author', 'value', 'index', 'coach'],
+    props: ['author', 'value', 'index', 'coach'],
     data: function () {
         return {
             input: "",
@@ -210,16 +258,18 @@ Vue.component('gc-response-long', {
     },
     methods: {
         handleSubmit: function () {
-            var toSend = this.input;
-            var item = { content: "content", author: this.author };
 
-            item.content = toSend;
-            this.$emit('eventname', item);
+            //send user response
+            var toSend = this.input;
+            var item = { content: toSend, author: this.author };
+            this.$emit('newresponse', item);
+
+            //send coach response
             var a = this;
             axios.get("/api/Response/?value=" + toSend + "&coach=" + this.coach + "&index=" + this.index)
                 .then(function (response) {
 
-                    a.$emit('eventname', response.data)
+                    a.$emit('newcoachresponse', response.data)
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
@@ -240,16 +290,20 @@ Vue.component('gc-response-num', {
     },
     methods: {
         handleSubmit: function () {
+
+            //send user response
             var toSend = this.input;
             var item = { content: "content", author: this.author };
 
             item.content = toSend;
-            this.$emit('eventname', item);
+            this.$emit('newresponse', item);
+
+            //send coach response
             var a = this;
             axios.get("/api/Response/?value=" + toSend + "&coach=" + this.coach + "&index=" + this.index)
                 .then(function (response) {
 
-                    a.$emit('eventname', response.data)
+                    a.$emit('newcoachresponse', response.data)
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
